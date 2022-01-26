@@ -20,3 +20,31 @@ return 되는 값이 body에 직접들어간다, API개발시 기본원리로 �
 @Responsebody 가 붙어 있는 경우에는 컨트롤러 처리후 String converter(스트링의 경우), 
 JSON renderer(객체의 경우 default, jackson)로 던져서 처리한다.
 기존의 template rendering방식과 다르다.
+
+## @Autowired, @Configuration
+@Autowired를 통해 스프링이 필요한 빈을 주입할수 있다. 
+이때 bean은 @Controller, @Service, @Component를 명시하여
+스프링이 등록할수 있도록 해줘야 한다.
+```java
+// 이때 MemberService 는 bean으로 등록되어있어야 한다.
+@Autowired
+public MemberController(MemberService memberService) {
+    this.memberService = memberService;
+}
+```
+
+```java
+// 직접 Configuration을 설정하여 Bean으로 등록할수 있다.
+@Configuration
+public class Config {
+    @Bean
+    public MemberService memberService() {
+        return new MemberService(memberRepository());
+    }
+
+    @Bean
+    public MemberRepository memberRepository() {
+        return new MemoryMemberRepository();
+    }
+}
+```
